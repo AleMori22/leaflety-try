@@ -79,8 +79,8 @@ function createMarkers(response){
           if (avalability.is_installed == 0){
 
             let redpentaMarker = L.ExtraMarkers.icon({
-              icon: 'fa-coffee',
-              markerColor: 'red',
+              icon: 'bicycle-outline',
+              markerColor: 'blue-dark',
               shape: 'penta',
               prefix: 'fa'
             });
@@ -95,8 +95,6 @@ function createMarkers(response){
             );
 
             redpentabikeMarkers.push(RedPentabikeMarker);
-
-            let redPMarkerLayer = L.layerGroup(redpentabikeMarkers);
 
           } else 
           
@@ -123,8 +121,6 @@ function createMarkers(response){
   
               redcirclebikeMarkers.push(RedCirclebikeMarker);
 
-              let redCMarkerLayer = L.layerGroup(redcirclebikeMarkers)
-
             }else 
             
             // Setup the variable for the Orange Circle Markers for bike station not renting
@@ -149,8 +145,6 @@ function createMarkers(response){
               );
   
               orangecirclebikeMarkers.push(OrangeCirclebikeMarker);
-
-              let orangeMarkerLayer = L.layerGroup(orangecirclebikeMarkers);
 
             }else 
 
@@ -177,21 +171,19 @@ function createMarkers(response){
   
               yellowcirclebikeMarkers.push(YellowCirclebikeMarker);
 
-              let yellowMarkerLayer = L.layerGroup(yellowcirclebikeMarkers);
-
             }else {
             
             // For each station, create a marker, and bind a popup with the station's name.
 
-            let BluCircleMarker = L.ExtraMarkers.icon({
+            let GreenCircleMarker = L.ExtraMarkers.icon({
               icon: 'fa-coffee',
-              markerColor: 'blu',
+              markerColor: 'green',
               shape: 'circle',
               prefix: 'fa'
 
             });
 
-            let bikeMarker = L.marker([station.lat,station.lon],{icon: BluCircleMarker}).bindPopup(
+            let bikeMarker = L.marker([station.lat,station.lon],{icon: GreenCircleMarker}).bindPopup(
               `<h3> Station: ${station.name} </h3> 
               <br>  
               <h3>Capacity: ${station.capacity} </h3> 
@@ -210,7 +202,17 @@ function createMarkers(response){
     // Create the map
 
 
-    let blueMarkerLayer = L.layerGroup(bikeMarkers)
+    let greenMarkerLayer = L.layerGroup(bikeMarkers);
+
+    let redPMarkerLayer = L.layerGroup(redpentabikeMarkers);
+
+    let redCMarkerLayer = L.layerGroup(redcirclebikeMarkers);
+
+    let orangeMarkerLayer = L.layerGroup(orangecirclebikeMarkers);
+
+    let yellowMarkerLayer = L.layerGroup(yellowcirclebikeMarkers);
+
+
     
 
     let streetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -224,17 +226,18 @@ function createMarkers(response){
   
     // Create an overlayMaps object to hold the bikeStations layer.
     let overlayMaps ={
-      "Bike Stations" : blueMarkerLayer//,
-      //"Non installed": redPMarkerLayer,
-      //"Out of bikes":,
-
+      "Bike Stations" : greenMarkerLayer,
+      "Non installed": redPMarkerLayer,
+      "Out of bikes": redCMarkerLayer,
+      "Not Renting" : orangeMarkerLayer,
+      "Low Bikes" : yellowMarkerLayer
     };
   
     // Create the map object with options.
     let myMap = L.map("map-id",{
       center : newYorkCoords,
       zoom : 15,
-      layers : [streetMap , blueMarkerLayer]
+      layers : [streetMap , redPMarkerLayer]
     });
   
     // Create a layer control, and pass it baseMaps and overlayMaps. Add the layer control to the map.
